@@ -1,0 +1,193 @@
+{
+  "info": {
+    "_postman_id": "638ac21c-53d3-477e-a624-5892324b2b87",
+    "name": "Task API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58557516",
+    "_collection_link": "https://go.postman.co/collection/58557516-638ac21c-53d3-477e-a624-5892324b2b87?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Create task (201)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\": \"Learn Postman\", \"priority\": \"High\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/tasks",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "tasks"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List tasks (200)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/tasks",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "tasks"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get task (200)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/tasks/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "tasks",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get missing task (404)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/tasks/999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "tasks",
+            "999"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create with blank title (400)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\": \"\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/tasks",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "tasks"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create with invalid priority (400)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\": \"x\", \"priority\": \"Urgent\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/tasks",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "tasks"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update task (200)",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\": \"Done\", \"priority\": \"Low\", \"completed\": true}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/tasks/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "tasks",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete task (200)",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/tasks/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "tasks",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": ""
+    }
+  ]
+}
