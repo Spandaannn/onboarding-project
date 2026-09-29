@@ -35,6 +35,38 @@ git clone git@github.com:Spandaannn/onboarding-project.git
 cd onboarding-project
 ```
 
+## Running locally
+
+You need two terminals: one for the backend, one for the frontend.
+
+### 1. Backend (http://localhost:8000)
+```bash
+cd backend
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+uvicorn app.main:app --reload
+```
+API docs: http://localhost:8000/docs
+
+### 2. Frontend (http://localhost:5173)
+```bash
+cd frontend
+npm install
+echo "VITE_API_URL=http://localhost:8000" > .env
+npm run dev
+```
+
+### 3. Run backend tests
+```bash
+cd backend && source venv/bin/activate && pytest -v
+```
+
+### Troubleshooting
+- **"Cannot reach the server"**: the backend isn't running, or `VITE_API_URL` is wrong.
+- **CORS error in the browser console**: `FRONTEND_ORIGIN` in `backend/.env` must exactly match the frontend URL.
+
 ## Backend (Task API)
 
 ### Run

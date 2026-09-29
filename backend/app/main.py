@@ -1,16 +1,24 @@
-from fastapi import FastAPI, Depends, HTTPException, Request, status
+from fastapi import FastAPI, Depends, HTTPException, Request, Response, status
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.orm import Session
 
 from app import models, schemas
+from app.config import FRONTEND_ORIGIN
 from app.database import Base, engine, get_db
 
 Base.metadata.create_all(bind=engine)  # creates tables on startup if missing
 
 app = FastAPI(title="Task API", version="1.0.0")
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[FRONTEND_ORIGIN],
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["X-Total-Count"],
+)
 
 # FastAPI returns 422 for bad input by default; the assignment asks for 400.
 @app.exception_handler(RequestValidationError)
@@ -38,8 +46,19 @@ def health():
 
 
 @app.get("/tasks", response_model=list[schemas.TaskOut])
-def list_tasks(db: Session = Depends(get_db)):
-    return db.scalars(select(models.Task).order_by(models.Task.id.desc())).all()
+def list_tasks(
+    response: Response,
+    search: str | None = None,
+    skip: int = 0,
+    limit: int = 50,
+    db: Session = Depends(get_db),
+):
+    query = select(models.Task)
+    if search:
+        query = query.where(models.Task.title.ilike(f"%{search}%"))
+    total = db.scalar(select(func.count()).select_from(query.subquery()))
+    response.headers["X-Total-Count"] = str(total)  # lets the frontend build page numbers
+    return db.scalars(query.order_by(models.Task.id.desc()).offset(skip).limit(min(limit, 100))).all()
 
 
 @app.get("/tasks/{task_id}", response_model=schemas.TaskOut)
