@@ -3,4 +3,4 @@ uvicorn[standard]
 sqlalchemy
 python-dotenv
 pytest
-httpx
+httpxanthropic

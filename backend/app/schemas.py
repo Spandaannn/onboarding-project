@@ -27,8 +27,20 @@ class TaskUpdate(TaskBase):
     completed: bool = False
 
 
+class SubtaskOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    title: str
+
+
 class TaskOut(TaskBase):
     model_config = ConfigDict(from_attributes=True)
     id: int
     completed: bool
     created_at: datetime
+    subtasks: list[SubtaskOut] = []
+
+
+class SubtaskList(BaseModel):
+    model_config = ConfigDict(str_strip_whitespace=True)
+    subtasks: list[str] = Field(min_length=1, max_length=10)
