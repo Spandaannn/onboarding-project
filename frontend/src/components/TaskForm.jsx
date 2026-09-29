@@ -8,13 +8,14 @@ export default function TaskForm({ onAdd }) {
   const [priority, setPriority] = useState('Medium')
   const [error, setError] = useState('')
 
-  function handleSubmit(e) {
+    async function handleSubmit(e) {
     e.preventDefault() // stop the browser from reloading the page
     if (!title.trim()) {
       setError('Title is required')
       return
     }
-    onAdd({ title: title.trim(), description: description.trim(), priority })
+    const ok = await onAdd({ title: title.trim(), description: description.trim(), priority })
+    if (ok === false) return // keep what the user typed if the save failed
     setTitle('')
     setDescription('')
     setPriority('Medium')
