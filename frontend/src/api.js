@@ -36,4 +36,7 @@ export const api = {
       }),
     }),
   remove: (id) => request(`/tasks/${id}`, { method: 'DELETE' }),
+  breakdown: (id) => request(`/tasks/${id}/breakdown`, { method: 'POST' }),
+  saveSubtasks: (id, subtasks) =>
+    request(`/tasks/${id}/subtasks`, { method: 'POST', body: JSON.stringify({ subtasks }) }),
 }

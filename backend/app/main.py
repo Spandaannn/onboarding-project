@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 from app import models, schemas
 from app.config import FRONTEND_ORIGIN
 from app.database import Base, engine, get_db
+from app.llm import LLMError, generate_subtasks
 
 Base.metadata.create_all(bind=engine)  # creates tables on startup if missing
 
@@ -91,3 +92,23 @@ def delete_task(task_id: int, db: Session = Depends(get_db)):
     db.delete(task)
     db.commit()
     return {"detail": f"Task {task_id} deleted"}
+
+
+# ---------- Assignment 5: AI breakdown ----------
+@app.post("/tasks/{task_id}/breakdown")
+def breakdown_task(task_id: int, db: Session = Depends(get_db)):
+    task = get_task_or_404(task_id, db)
+    try:
+        subtasks = generate_subtasks(task.title, task.description)
+    except LLMError as e:
+        raise HTTPException(status_code=e.status_code, detail=e.message)
+    return {"task_id": task_id, "subtasks": subtasks}
+
+
+@app.post("/tasks/{task_id}/subtasks", response_model=schemas.TaskOut, status_code=201)
+def save_subtasks(task_id: int, payload: schemas.SubtaskList, db: Session = Depends(get_db)):
+    task = get_task_or_404(task_id, db)
+    task.subtasks = [models.Subtask(title=t) for t in payload.subtasks if t]
+    db.commit()
+    db.refresh(task)
+    return task

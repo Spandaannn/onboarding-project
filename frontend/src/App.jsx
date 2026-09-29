@@ -51,6 +51,7 @@ export default function App() {
   const addTask = (data) => run(() => api.create(data))
   const updateTask = (task) => run(() => api.update(task))
   const deleteTask = (id) => run(() => api.remove(id))
+  const saveSubtasks = (id, subtasks) => run(() => api.saveSubtasks(id, subtasks))
 
   let visible = tasks.filter((t) =>
     filter === 'Active' ? !t.completed : filter === 'Completed' ? t.completed : true
@@ -99,7 +100,7 @@ export default function App() {
         ) : (
           <ul className="space-y-3">
             {visible.map((t) => (
-              <TaskItem key={t.id} task={t} onUpdate={updateTask} onDelete={deleteTask} />
+              <TaskItem key={t.id} task={t} onUpdate={updateTask} onDelete={deleteTask} onSaveSubtasks={saveSubtasks} />
             ))}
           </ul>
         )}
